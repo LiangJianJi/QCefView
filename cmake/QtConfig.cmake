@@ -7,6 +7,8 @@
 # Non-Windows: export QTDIR=PATH/TO/QT
 # 2. modifying the value below directly
 #
+# example
+#set(QT_SDK_DIR "C:/Qt/5.15.2/msvc2019_64")
 
 # Qt build toolchain path not set or doesn't exist
 # try to read from environment QTDIR

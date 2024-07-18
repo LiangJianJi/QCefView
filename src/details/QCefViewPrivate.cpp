@@ -1,4 +1,4 @@
-#include "QCefViewPrivate.h"
+﻿#include "QCefViewPrivate.h"
 
 #pragma region std_headers
 #include <stdexcept>
@@ -11,6 +11,8 @@
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QInputMethodQueryEvent>
+#include <QJsonArray>
+#include <QJsonDocument>
 #include <QPainter>
 #include <QWindow>
 #pragma endregion qt_headers
@@ -677,6 +679,14 @@ QCefViewPrivate::onFileDialog(CefBrowserHost::FileDialogMode mode,
       file_paths.push_back(file.toStdString());
     }
 
+    // 如果网页定义了 onFilePickerReturn(result){ console.log(result) } 函数，可以通过此函数获取返回值
+    QJsonArray fileArray;
+    foreach (auto fileString, selected_files) {
+      fileArray.append(fileString);
+    }
+    QString jsData = QJsonDocument(fileArray).toJson(QJsonDocument::Compact);
+    executeJavascript(0, QStringLiteral("onFilePickerReturn('%1')").arg(jsData), QString());
+
 #if CEF_VERSION_MAJOR < 102
     int index = filters.indexOf(dialog.selectedNameFilter());
     callback->Continue(index, file_paths);
@@ -684,6 +694,9 @@ QCefViewPrivate::onFileDialog(CefBrowserHost::FileDialogMode mode,
     callback->Continue(file_paths);
 #endif
   } else {
+    QJsonArray fileArray;
+    QString jsData = QJsonDocument(fileArray).toJson(QJsonDocument::Compact);
+    executeJavascript(0, QStringLiteral("onFilePickerReturn('%1')").arg(jsData), QString());
     callback->Cancel();
   }
 }
