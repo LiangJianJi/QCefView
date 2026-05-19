@@ -947,8 +947,14 @@ QCefViewPrivate::onFileDialog(CefBrowserHost::FileDialogMode mode,
     dialog.selectFile(fileInfo.fileName());
   }
 
-  // set accepted file types
-  dialog.setNameFilters(accept_filters);
+  //// set accepted file types
+  //dialog.setNameFilters(accept_filters);
+
+  // 修复后（只弹1次，合并所有类型）：
+  if (!accept_filters.isEmpty()) {
+    QString allTypes = accept_filters.join(" ");
+    dialog.setNameFilter("(" + allTypes + ")");
+  }
 
   // execute the dialog
   if (dialog.exec()) {
