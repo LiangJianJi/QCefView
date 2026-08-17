@@ -1109,7 +1109,13 @@ QCefViewPrivate::eventFilter(QObject* watched, QEvent* event)
         // the surface is about to be destroyed (top-level window is being closed)
         auto t = static_cast<QPlatformSurfaceEvent*>(event)->surfaceEventType();
         if (QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed == t) {
-          if (watched == ncw.qBrowserWindow_->cefWindow()) {
+          // [fix] Null-check qBrowserWindow_ before dereferencing.
+          // When multiple QCefView instances exist, each registers its own eventFilter on qApp.
+          // If one QCefWindow is destroyed (QPointer zeroed) but its eventFilter hasn't been
+          // removed yet (e.g., during app shutdown with nested event loops), a PlatformSurface
+          // event from another window's destruction will reach this filter and crash on
+          // ncw.qBrowserWindow_->cefWindow() with a null pointer dereference (read 0x30).
+          if (ncw.qBrowserWindow_ && watched == ncw.qBrowserWindow_->cefWindow()) {
             // detach the cef window
             ncw.qBrowserWindow_->detachCefWindow();
           }
