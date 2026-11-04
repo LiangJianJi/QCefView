@@ -61,6 +61,13 @@ private:
 #endif
 
   /// <summary>
+  /// True after a successful CefInitialize; reset by uninitialize.
+  /// Hosts query this via QCefContext::isInitialized() to detect a failed
+  /// CEF startup (e.g. missing libcef) and disable CEF views accordingly.
+  /// </summary>
+  bool initOk_ = false;
+
+  /// <summary>
   ///
   /// </summary>
   CefRefPtr<CefViewBrowserApp> pApp_;

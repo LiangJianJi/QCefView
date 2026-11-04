@@ -174,6 +174,12 @@ QCefViewPrivate::createCefBrowser(const QString& url, const QCefSettingPrivate* 
   auto pClientDelegate = std::make_shared<CCefClientDelegate>(sharedFromThis());
 
   // 2. create browser client handler
+  // CEF app must be valid here; after a failed CefInitialize it is not,
+  // and CefViewBrowserClient / the browser creation path would crash on it
+  if (!pContextPrivate_->getCefApp()) {
+    qWarning() << __FUNCTION__ << "CEF app is invalid, skip browser creation";
+    return;
+  }
   auto pClient = new CefViewBrowserClient(pContextPrivate_->getCefApp(), pClientDelegate);
 
   // 3. create the browser settings

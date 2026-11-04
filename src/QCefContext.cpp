@@ -105,7 +105,10 @@ QCefContext::init(const QCefConfig* config)
   s_self = this;
 
   Q_D(QCefContext);
-  d->initialize(config);
+  if (!d->initialize(config)) {
+    qWarning() << __FUNCTION__ << "CEF initialization failed";
+    return false;
+  }
 
   return true;
 }
@@ -117,4 +120,11 @@ QCefContext::uninit()
   d->uninitialize();
 
   s_self = nullptr;
+}
+
+bool
+QCefContext::isInitialized() const
+{
+  Q_D(const QCefContext);
+  return d->initOk_;
 }

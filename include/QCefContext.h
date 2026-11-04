@@ -126,6 +126,15 @@ public:
   /// <returns>The QCefConfig instance</returns>
   const QCefConfig* cefConfig() const;
 
+  /// <summary>
+  /// Reports whether CEF was successfully initialized in this context.
+  /// A host that creates the QCefContext on startup can use this to detect a
+  /// failed CefInitialize (e.g. missing or incompatible libcef runtime) and
+  /// disable/replace CEF-backed views instead of presenting blank panes.
+  /// </summary>
+  /// <returns>True if initialized; otherwise false</returns>
+  bool isInitialized() const;
+
 protected:
   /// <summary>
   /// Initialize the CEF context
