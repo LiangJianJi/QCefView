@@ -126,5 +126,5 @@ bool
 QCefContext::isInitialized() const
 {
   Q_D(const QCefContext);
-  return d->initOk_;
+  return d->isInitialized();
 }

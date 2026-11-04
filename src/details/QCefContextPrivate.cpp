@@ -65,6 +65,12 @@ QCefContextPrivate::cefConfig() const
   return config_;
 }
 
+bool
+QCefContextPrivate::isInitialized() const
+{
+  return initOk_;
+}
+
 void
 QCefContextPrivate::addLocalFolderResource(const QString& path, const QString& url, int priority /*= 0*/)
 {
