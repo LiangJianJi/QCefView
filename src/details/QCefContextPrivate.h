@@ -108,6 +108,11 @@ public:
   const QCefConfig* cefConfig() const;
 
   /// <summary>
+  /// Returns true if CEF was initialized successfully
+  /// </summary>
+  bool isInitialized() const;
+
+  /// <summary>
   /// Adds a url mapping item with local web resource directory
   /// </summary>
   /// <param name="path">The path to the local resource directory</param>
